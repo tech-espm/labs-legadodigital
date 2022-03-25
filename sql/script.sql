@@ -31,16 +31,15 @@ CREATE TABLE usuario (
 
 INSERT INTO usuario (email, nome, idperfil, senha, token, criacao) VALUES ('admin@meutestamento.com.br', 'Administrador', 1, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW());
 
--- DROP TABLE IF EXISTS projeto;
-CREATE TABLE projeto (
-  id int NOT NULL,
+-- DROP TABLE IF EXISTS conteudo;
+CREATE TABLE conteudo (
+  id int NOT NULL AUTO_INCREMENT,
   idusuario int NOT NULL,
   nome varchar(100) NOT NULL,
-  apelido varchar(100) NOT NULL,
-  aprovado tinyint NOT NULL,
+  descricao mediumtext NOT NULL,
   criacao datetime NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY projeto_nome_UN (nome),
-  KEY projeto_idusuario_FK_IX (idusuario),
-  CONSTRAINT projeto_idusuario_FK FOREIGN KEY (idusuario) REFERENCES usuario (id) ON DELETE CASCADE ON UPDATE RESTRICT
+  UNIQUE KEY conteudo_nome_UN (nome),
+  KEY conteudo_idusuario_FK_IX (idusuario),
+  CONSTRAINT conteudo_idusuario_FK FOREIGN KEY (idusuario) REFERENCES usuario (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
