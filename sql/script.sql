@@ -29,7 +29,7 @@ CREATE TABLE usuario (
   CONSTRAINT usuario_idperfil_FK FOREIGN KEY (idperfil) REFERENCES perfil (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-INSERT INTO usuario (email, nome, idperfil, senha, token, criacao) VALUES ('admin@legadodigital.com.br', 'Administrador', 1, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW());
+INSERT INTO usuario (email, nome, idperfil, senha, token, criacao) VALUES ('admin@meutestamento.com.br', 'Administrador', 1, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW());
 
 -- DROP TABLE IF EXISTS projeto;
 CREATE TABLE projeto (
