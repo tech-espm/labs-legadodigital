@@ -11,6 +11,8 @@ interface Usuario {
 	id: number;
 	email: string;
 	nome: string;
+	cpf: string;
+	telefone: string;
 	idperfil: Perfil;
 	senha: string;
 	criacao: string;
@@ -35,7 +37,7 @@ class Usuario {
 			let usuario: Usuario = null;
 
 			await app.sql.connect(async (sql) => {
-				let rows = await sql.query("select id, email, nome, idperfil, token from usuario where id = ?", [id]);
+				let rows = await sql.query("select id, email, nome, idperfil, token, cpf, telefone from usuario where id = ?", [id]);
 				let row: any;
 
 				if (!rows || !rows.length || !(row = rows[0]))
@@ -181,7 +183,7 @@ class Usuario {
 		let lista: Usuario[] = null;
 
 		await app.sql.connect(async (sql) => {
-			lista = await sql.query("select id, email, nome, idperfil, date_format(criacao, '%d/%m/%Y') criacao from usuario where id = ?", [id]) as Usuario[];
+			lista = await sql.query("select id, email, nome, idperfil, date_format(criacao, '%d/%m/%Y') criacao, cpf, telefone from usuario where id = ?", [id]) as Usuario[];
 		});
 
 		return ((lista && lista[0]) || null);
@@ -194,7 +196,7 @@ class Usuario {
 
 		await app.sql.connect(async (sql) => {
 			try {
-				await sql.query("insert into usuario (email, nome, idperfil, senha, criacao) values (?, ?, ?, ?, now())", [usuario.email, usuario.nome, usuario.idperfil, await GeradorHash.criarHash(usuario.senha)]);
+				await sql.query("insert into usuario (email, nome, idperfil, senha, criacao, cpf, telefone) values (?, ?, ?, ?, now(), ?, ?)", [usuario.email, usuario.nome, usuario.idperfil, await GeradorHash.criarHash(usuario.senha), usuario.cpf, usuario.telefone]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {

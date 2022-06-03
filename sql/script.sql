@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS litag DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_0900_ai_ci;
-USE litag;
+CREATE DATABASE IF NOT EXISTS legado DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci;
+USE legado;
 
 CREATE TABLE perfil (
   id INT NOT NULL AUTO_INCREMENT,
@@ -15,6 +15,8 @@ CREATE TABLE usuario (
   id INT NOT NULL AUTO_INCREMENT,
   email VARCHAR(100) NOT NULL,
   nome VARCHAR(100) NOT NULL,
+  cpf VARCHAR(11) NOT NULL,
+  telefone VARCHAR(11) NOT NULL,
   idperfil INT NOT NULL,
   senha VARCHAR(100) NOT NULL,
   token CHAR(32) DEFAULT NULL,
@@ -27,7 +29,7 @@ CREATE TABLE usuario (
   CONSTRAINT usuario_idperfil_FK FOREIGN KEY (idperfil) REFERENCES perfil (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-INSERT INTO usuario (email, nome, idperfil, senha, token, criacao) VALUES ('admin@litag.com.br', 'Administrador', 1, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW());
+INSERT INTO usuario (email, nome, idperfil, senha, token, criacao, cpf, telefone) VALUES ('admin@litag.com.br', 'Administrador', 1, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW(), '11111111111', '11111111111');
 
 CREATE TABLE contato (
   id INT NOT NULL AUTO_INCREMENT,
