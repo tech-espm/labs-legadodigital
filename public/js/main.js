@@ -48,9 +48,9 @@ window.parseQueryString = function () {
 	return assoc;
 };
 window.encode = (function () {
-	var lt = /</g, gt = />/g;
+	var amp = /\&/g, lt = /</g, gt = />/g;
 	return function (x) {
-		return (x ? x.replace(lt, "&lt;").replace(gt, "&gt;") : "");
+		return (x ? x.replace(amp, "&amp;").replace(lt, "&lt;").replace(gt, "&gt;") : "");
 	};
 })();
 window.prepareCopyHandler = function (modal, selector) {
@@ -1934,7 +1934,7 @@ window.prepareFilteredCbState = function (cbState, cbCity, callback) {
 window.prepareCbState = function (cbState, cbCity, callback) {
 	if (cbCity) {
 		cbState.onchange = function () {
-			var i, id, opt, s = parseInt(cbState.value);
+			var i, id, opt, s = parseInt(cbState.value), extras;
 			s = ((!isNaN(s) && s > 0) ? window.cidades[s] : null);
 			while (cbCity.childNodes.length > 1)
 				cbCity.removeChild(cbCity.childNodes[1]);
@@ -1942,6 +1942,7 @@ window.prepareCbState = function (cbState, cbCity, callback) {
 			if (cbCity.cbSearchInput)
 				cbCity.cbSearchInput.value = "";
 			if (s && s.c && s.c.length) {
+				extras = s.extras;
 				id = s.i;
 				s = s.c;
 				for (i = 0; i < s.length; i++) {
@@ -1949,6 +1950,14 @@ window.prepareCbState = function (cbState, cbCity, callback) {
 					opt.setAttribute("value", id + i);
 					opt.textContent = s[i];
 					cbCity.appendChild(opt);
+				}
+				if (extras) {
+					for (i = 0; i < extras.length; i++) {
+						opt = document.createElement("option");
+						opt.setAttribute("value", extras[i].i);
+						opt.textContent = extras[i].n;
+						cbCity.insertBefore(opt, cbCity.childNodes[extras[i].idx + 1]);
+					}
 				}
 			}
 			if (callback)
@@ -2218,34 +2227,53 @@ Swal.okcancelNoIcon = function (message, title) {
 	return Swal.fire(options);
 };
 
-Swal.wait = function (message) {
-	var options = message;
+(function () {
+	var waitCalled = false, shouldShowWait = false, fire = Swal.fire;
 
-	if (!options)
-		options = {};
+	Swal.fire = function () {
+		if (waitCalled) {
+			waitCalled = false;
+			shouldShowWait = true;
+		} else {
+			shouldShowWait = false;
+		}
 
-	if (typeof message === "string")
-		options = { text: message };
-
-	if (!options.html && !options.text)
-		options.text = "Por favor, aguarde...";
-
-	if (!options.allowOutsideClick)
-		options.allowOutsideClick = false;
-
-	if (!options.allowEscapeKey)
-		options.allowEscapeKey = false;
-
-	if (!options.allowEnterKey)
-		options.allowEnterKey = false;
-
-	var didOpen = options.didOpen;
-
-	options.didOpen = function () {
-		Swal.showLoading();
-		if (didOpen)
-			didOpen();
+		fire.apply(Swal, arguments);
 	};
 
-	return Swal.fire(options);
-};
+	Swal.wait = function (message) {
+		var options = message;
+
+		if (!options)
+			options = {};
+
+		if (typeof message === "string")
+			options = { text: message };
+
+		if (!options.html && !options.text)
+			options.text = "Por favor, aguarde...";
+
+		if (!options.allowOutsideClick)
+			options.allowOutsideClick = false;
+
+		if (!options.allowEscapeKey)
+			options.allowEscapeKey = false;
+
+		if (!options.allowEnterKey)
+			options.allowEnterKey = false;
+
+		var didOpen = options.didOpen;
+
+		options.didOpen = function () {
+			if (shouldShowWait) {
+				Swal.showLoading();
+				if (didOpen)
+					didOpen();
+			}
+		};
+
+		waitCalled = true;
+
+		return Swal.fire(options);
+	};
+})();
