@@ -1,4 +1,5 @@
 ﻿import app = require("teem");
+import Contato = require("../models/contato");
 import Documento = require("../models/documento");
 import etiquetas = require("../models/etiqueta");
 import Usuario = require("../models/usuario");
@@ -14,6 +15,7 @@ class DocumentoRoute {
 				textoSubmit: "Criar",
 				usuario: u,
 				item: null,
+				contatos: await Contato.listar(u.id),
 				etiquetas: etiquetas.lista
 			});
 	}
@@ -35,6 +37,7 @@ class DocumentoRoute {
 					titulo: "Editar Documento",
 					usuario: u,
 					item: item,
+					contatos: await Contato.listar(u.id),
 					etiquetas: etiquetas.lista
 				});
 		}

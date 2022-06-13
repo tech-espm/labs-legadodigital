@@ -3,7 +3,7 @@
 
 <div class="row">
 	<div class="col-sm-6">
-		<div class="form-group mb-0">
+		<div class="form-group">
 			<label for="idetiqueta">Etiqueta</label>
 			<select id="idetiqueta" name="idetiqueta" class="form-control" size="1">
 				<option value="">Selecione...</option>
@@ -29,6 +29,48 @@
 
 <div id="editorConteudo"><%-(item ? item.conteudo : '') %></div>
 
+<hr/>
+
+<h2 class="mb-5">Contatos do Documento</h2>
+
+<div class="row mb-3">
+	<div class="col-sm-3">
+		<button type="button" class="btn btn-primary btn-block" onclick="adicionarContato()"><i class="fa fa-plus"></i> Adicionar</button>
+	</div>
+	<div class="col-sm-9">
+		<select id="idcontato" class="form-control" size="1">
+			<option value="">Selecione...</option>
+			<% for (let i = 0; i < contatos.length; i++) { %>
+			<option value="<%= contatos[i].id %>"><%= contatos[i].nome %></option>
+			<% } %>
+		</select>
+	</div>
+</div>
+
+<div class="table-responsive">
+	<table class="table table-flush table-striped table-hover">
+		<thead>
+			<tr>
+				<th class="col-min"></th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody id="corpoTabela">
+			<% if (item && item.contatos) { for (let i = 0; i < item.contatos.length; i++) { %>
+			<tr>
+				<td class="col-min">
+					<button title="Excluir" type="button" class="btn btn-outline-danger" onclick="excluirContato(this)"><i class="fa fa-fw fa-times"></i></button>
+					<input type="hidden" name="idsContato" value="<%= item.contatos[i].id %>" />
+				</td>
+				<td>
+					<%= item.contatos[i].nome %>
+				</td>
+			</tr>
+			<% } } %>
+		</tbody>
+	</table>
+</div>
+
 <%- contentFor("scripts") %>
 
 <script type="text/javascript" src="<%- staticRoot %>/lib/ckeditor/ckeditor.js"></script>
@@ -38,6 +80,31 @@
 	"use strict";
 
 	CKEDITOR.replace("editorConteudo");
+
+	function adicionarContato() {
+		if (JsonWebApi.active)
+			return;
+
+		let idcontato = document.getElementById("idcontato");
+		let i = parseInt(idcontato.value);
+		if (!i)
+			return;
+
+		$("#corpoTabela").append(`<tr>
+			<td class="col-min">
+				<button title="Excluir" type="button" class="btn btn-outline-danger" onclick="excluirContato(this)"><i class="fa fa-fw fa-times"></i></button>
+				<input type="hidden" name="idsContato" value="${i}" />
+			</td>
+			<td>
+				${idcontato.options[idcontato.options.selectedIndex].textContent}
+			</td>
+		</tr>`);
+	}
+
+	function excluirContato(botao) {
+		if (botao)
+			document.getElementById("corpoTabela").removeChild(botao.parentNode.parentNode);
+	}
 
 	$("#form").validate({
 		rules: {
@@ -71,6 +138,8 @@
 			JsonWebApi.postFormData("<%- root %>/api/documento/criar", form, function (response) {
 				if (response.success) {
 					resetForm("#form");
+					CKEDITOR.instances.editorConteudo.setData("");
+					document.getElementById("corpoTabela").innerHTML = "";
 					Swal.success("Documento criado com sucesso! " + emoji.happy);
 				} else {
 					Swal.error(response.value + " " + emoji.sad);

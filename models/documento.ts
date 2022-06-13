@@ -1,5 +1,6 @@
 import app = require("teem");
 import Validacao = require("../utils/validacao");
+import Contato = require("./contato");
 
 interface Documento {
 	id: number;
@@ -10,6 +11,7 @@ interface Documento {
 	extensao?: string;
 
 	idsContato?: number[];
+	contatos?: Contato[];
 }
 
 class Documento {
@@ -32,6 +34,17 @@ class Documento {
 		if (!(documento.conteudo = documento.conteudo.normalize().trim()))
 			return "Conteúdo inválido";
 
+		if (documento.idsContato) {
+			if (!Array.isArray(documento.idsContato))
+				documento.idsContato = [documento.idsContato as any];
+
+			for (let i = documento.idsContato.length - 1; i >= 0; i--) {
+				documento.idsContato[i] = parseInt(documento.idsContato[i] as any);
+				if (isNaN(documento.idsContato[i]))
+					return "Contato inválido";
+			}
+		}
+
 		return null;
 	}
 
@@ -50,6 +63,9 @@ class Documento {
 
 		await app.sql.connect(async (sql) => {
 			lista = await sql.query("select id, idetiqueta, nome, descricao, conteudo from documento where id = ? and idusuario = ?", [id, idusuario]) as Documento[];
+
+			if (lista && lista[0])
+				lista[0].contatos = await sql.query("select c.id, c.nome from contato_documento cd inner join contato c on c.id = cd.idcontato where cd.iddocumento = ?", [id]);
 		});
 
 		return ((lista && lista[0]) || null);
@@ -62,7 +78,18 @@ class Documento {
 
 		await app.sql.connect(async (sql) => {
 			try {
+				await sql.beginTransaction();
+
 				await sql.query("insert into documento (idusuario, idetiqueta, nome, descricao, conteudo, extensao) values (?, ?, ?, ?, ?, null)", [idusuario, documento.idetiqueta, documento.nome, documento.descricao, documento.conteudo]);
+
+				const id: number = await sql.scalar("select last_insert_id()");
+
+				if (documento.idsContato && documento.idsContato.length) {
+					for (let i = 0; i < documento.idsContato.length; i++)
+						await sql.query("insert into contato_documento (idcontato, iddocumento) values (?, ?)", [documento.idsContato[i], id]);
+				}
+
+				await sql.commit();
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
@@ -88,10 +115,23 @@ class Documento {
 			return res;
 
 		return await app.sql.connect(async (sql) => {
-		
+			await sql.beginTransaction();
+
 			await sql.query("update documento set idetiqueta = ?, nome = ?, descricao = ?, conteudo = ? where id = ? and idusuario = ?", [documento.idetiqueta, documento.nome, documento.descricao, documento.conteudo, documento.id, idusuario]);
 
-			return (sql.affectedRows ? null : "Documento não encontrado");
+			if (!sql.affectedRows)
+				return "Documento não encontrado";
+
+			await sql.query("delete from contato_documento where iddocumento = ?", [documento.id]);
+
+			if (documento.idsContato && documento.idsContato.length) {
+				for (let i = 0; i < documento.idsContato.length; i++)
+					await sql.query("insert into contato_documento (idcontato, iddocumento) values (?, ?)", [documento.idsContato[i], documento.id]);
+			}
+
+			await sql.commit();
+
+			return null;
 		});
 	}
 
