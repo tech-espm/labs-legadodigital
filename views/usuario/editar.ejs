@@ -20,14 +20,14 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<label for="cpf">CPF</label>
-			<input id="cpf" name="cpf" maxlength="11" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.cpf : '') %>" />
+			<input id="cpf" name="cpf" maxlength="14" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.cpf : '') %>" />
 		</div>
 	</div>
 
 	<div class="col-sm-6">
 		<div class="form-group">
 			<label for="telefone">Telefone</label>
-			<input id="telefone" name="telefone" maxlength="11" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.telefone : '') %>" />
+			<input id="telefone" name="telefone" maxlength="15" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.telefone : '') %>" />
 		</div>
 	</div>
 </div>
@@ -65,6 +65,9 @@
 	//<![CDATA[
 	"use strict";
 
+	$("#cpf").mask("000.000.000-00");
+	maskMobilePhone("#telefone");
+
 	$("#form").validate({
 		rules: {
 			email: {
@@ -74,7 +77,8 @@
 				required: true
 			},
 			cpf: {
-				required: true
+				required: true,
+				cpf: true
 			},
 			telefone: {
 				required: true

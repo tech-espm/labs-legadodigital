@@ -41,27 +41,27 @@ CREATE TABLE contato (
   CONSTRAINT contato_idusuario_FK FOREIGN KEY (idusuario) REFERENCES usuario (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-CREATE TABLE categoria (
+CREATE TABLE etiqueta (
   id INT NOT NULL,
   nome VARCHAR(50) NOT NULL,
   PRIMARY KEY (id)
 );
 
-INSERT INTO categoria (id, nome) VALUES (1, 'Social'), (2, 'Financeiro'), (3, 'Administrativo'), (4, 'Confidencial'), (5, 'Familiar');
+INSERT INTO etiqueta (id, nome) VALUES (1, 'Social'), (2, 'Financeiro'), (3, 'Administrativo'), (4, 'Confidencial'), (5, 'Familiar');
 
 CREATE TABLE documento (
   id BIGINT NOT NULL AUTO_INCREMENT,
   idusuario INT NOT NULL,
-  idcategoria INT NOT NULL,
+  idetiqueta INT NOT NULL,
   nome VARCHAR(100) NOT NULL,
   descricao VARCHAR(100) NOT NULL,
   conteudo MEDIUMTEXT NULL,
   extensao VARCHAR(45) NULL,
   PRIMARY KEY (id),
   KEY documento_idusuario_IX (idusuario),
-  KEY documento_idcategoria_IX (idcategoria),
+  KEY documento_idetiqueta_IX (idetiqueta),
   CONSTRAINT documento_idusuario_FK FOREIGN KEY (idusuario) REFERENCES usuario (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT documento_idcategoria_FK FOREIGN KEY (idcategoria) REFERENCES categoria (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT documento_idetiqueta_FK FOREIGN KEY (idetiqueta) REFERENCES etiqueta (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 CREATE TABLE contato_documento (
@@ -75,13 +75,13 @@ CREATE TABLE contato_documento (
   CONSTRAINT contato_documento_iddocumento_IX FOREIGN KEY (iddocumento) REFERENCES documento (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE TABLE contato_categoria (
+CREATE TABLE contato_etiqueta (
   id BIGINT NOT NULL AUTO_INCREMENT,
   idcontato INT NOT NULL,
-  idcategoria INT NOT NULL,
+  idetiqueta INT NOT NULL,
   PRIMARY KEY (id),
-  KEY contato_categoria_idcontato_IX (idcontato),
-  KEY contato_categoria_idcategoria_IX (idcategoria),
-  CONSTRAINT contato_categoria_idcontato_IX FOREIGN KEY (idcontato) REFERENCES contato (id) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT contato_categoria_idcategoria_IX FOREIGN KEY (idcategoria) REFERENCES categoria (id) ON DELETE CASCADE ON UPDATE RESTRICT
+  KEY contato_etiqueta_idcontato_IX (idcontato),
+  KEY contato_etiqueta_idetiqueta_IX (idetiqueta),
+  CONSTRAINT contato_etiqueta_idcontato_IX FOREIGN KEY (idcontato) REFERENCES contato (id) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT contato_etiqueta_idetiqueta_IX FOREIGN KEY (idetiqueta) REFERENCES etiqueta (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );

@@ -1,30 +1,21 @@
 import app = require("teem");
-import { randomBytes } from "crypto";
-import appsettings = require("../appsettings");
-import DataUtil = require("../utils/dataUtil");
-import GeradorHash = require("../utils/geradorHash");
-import intToHex = require("../utils/intToHex");
-import Perfil = require("../enums/perfil");
 import Validacao = require("../utils/validacao");
 
-interface Contato{
+interface Contato {
     id: number;
-    idUsuario: number;
     email: string;
     nome: string;
-
 }
 
-class Contato{
+class Contato {
     private static validar(contato: Contato, criacao: boolean): string {
 		if (!contato)
-			return "Usuário inválido";
+			return "Contato inválido";
 
 		contato.id = parseInt(contato.id as any);
 
 		if (criacao) {
-			// Limita o e-mail a 85 caracteres para deixar 15 sobrando, para tentar evitar perda de dados durante a concatenação da exclusão
-			if (!contato.email || !Validacao.isEmail(contato.email = contato.email.normalize().trim().toLowerCase()) || contato.email.length > 85)
+			if (!Validacao.isEmail(contato.email = contato.email.normalize().trim().toLowerCase()) || contato.email.length > 100)
 				return "E-mail inválido";
 		} else {
 			if (isNaN(contato.id))
@@ -41,7 +32,7 @@ class Contato{
 		let lista: Contato[] = null;
 
 		await app.sql.connect(async (sql) => {
-			lista = await sql.query("select c.id, c.idusuario, c.email, u.nome from contato c inner join usuario u on u.id = c.idusuario where c.idusuario = ? order by u.email asc", [idusuario]) as Contato[];
+			lista = await sql.query("select id, email, nome from contato where idusuario = ?", [idusuario]) as Contato[];
 		});
 
 		return (lista || []);
@@ -51,7 +42,7 @@ class Contato{
 		let lista: Contato[] = null;
 
 		await app.sql.connect(async (sql) => {
-			lista = await sql.query("select c.id, c.email, c.nome, c.idusuario from contato c inner join usuario u on u.id = c.idusuario where c.id = ? and u.id = ?", [id, idusuario]) as Contato[];
+			lista = await sql.query("select id, email, nome from contato where id = ? and idusuario = ?", [id, idusuario]) as Contato[];
 		});
 
 		return ((lista && lista[0]) || null);
@@ -87,24 +78,21 @@ class Contato{
 		return res;
 	}
     
-	public static async editar(contato: Contato): Promise<string> {
+	public static async editar(contato: Contato, idusuario: number): Promise<string> {
 		let res: string;
 		if ((res = Contato.validar(contato, false)))
 			return res;
 
 		return await app.sql.connect(async (sql) => {
-			await sql.query("update contato set nome = ?, where id = ?", [contato.nome, contato.id]);
+			await sql.query("update contato set nome = ?, email = ? where id = ? and idusuario = ?", [contato.nome, contato.email, contato.id, idusuario]);
 
 			return (sql.affectedRows ? null : "Contato não encontrado");
 		});
 	}
 
-	public static async excluir(id: number): Promise<string> {
-
+	public static async excluir(id: number, idusuario: number): Promise<string> {
 		return app.sql.connect(async (sql) => {
-			// Utilizar substr(email, instr(email, ':') + 1) para remover o prefixo, caso precise desfazer a exclusão (caso
-			// não exista o prefixo, instr() vai retornar 0, que, com o + 1, faz o substr() retornar a própria string inteira)
-			await sql.query("update contato set email = concat('@', id, ':', email), where id = ?", [id]);
+			await sql.query("delete from contato where id = ? and idusuario = ?", [id, idusuario]);
 
 			return (sql.affectedRows ? null : "Contato não encontrado");
 		});

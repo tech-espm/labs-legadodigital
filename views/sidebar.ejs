@@ -1,10 +1,8 @@
 ﻿<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-flex" id="accordionSidebar">
 
-	<li class="nav-item text-center p-3">
+	<li class="nav-item text-center p-3 bg-white">
 		<img src="<%- staticRoot %>/img/logo.png" style="max-width: 100%;">
 	</li>
-
-	<hr class="sidebar-divider my-0">
 
 	<!-- Para deixar sempre em destaque, basta adicionar a classe active -->
 	<li class="nav-item">
@@ -14,7 +12,14 @@
 		</a>
 	</li>
 
+	<hr class="sidebar-divider" />
+
 	<% if (usuario.admin) { %>
+
+	<div class="sidebar-heading">
+		Gerencial
+	</div>
+
 	<li class="nav-item">
 		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsuarios" aria-expanded="true" aria-controls="collapseUsuarios">
 			<i class="fas fa-fw fa-users"></i>
@@ -27,34 +32,41 @@
 			</div>
 		</div>
 	</li>
+
+	<hr class="sidebar-divider" />
 	<% } %>
 
-	<% if (!usuario.admin) { %>
-	<hr class="sidebar-divider">
+	<div class="sidebar-heading">
+		Testamento
+	</div>
 
 	<li class="nav-item">
-		<a class="nav-link" href="<%- root %>/usuario/testamentos">
-			<i class="fas fa-solid fa-file-signature"></i>
-			<span><b>Testamentos</b></span>
-		</a>
-	</li>
-
-	<li class="nav-item">
-		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseContatos" aria-expanded="true" aria-controls="collapseTwo">
-			<i class="fas fa-fw fa-user"></i>
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseContatos" aria-expanded="true" aria-controls="collapseContatos">
+			<i class="fas fa-fw fa-users"></i>
 			<span>Contatos</span>
 		</a>
 		<div id="collapseContatos" class="collapse" data-parent="#accordionSidebar">
 			<div class="bg-white py-2 collapse-inner rounded">
-				<a class="collapse-item" href="<%- root %>/usuario/contatos">Cadastrar Contato</a>
-				<a class="collapse-item" href="<%- root %>/exemplo/cards">Gerenciar Contatos</a>
+				<a class="collapse-item" href="<%- root %>/contato/criar">Criar</a>
+				<a class="collapse-item" href="<%- root %>/contato/listar">Gerenciar</a>
 			</div>
 		</div>
 	</li>
-	<% } %>
-	
-	
-	<hr class="sidebar-divider">
+
+	<li class="nav-item">
+		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDocumentos" aria-expanded="true" aria-controls="collapseDocumentos">
+			<i class="fas fa-fw fa-file-signature"></i>
+			<span>Documentos</span>
+		</a>
+		<div id="collapseDocumentos" class="collapse" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<a class="collapse-item" href="<%- root %>/documento/criar">Criar</a>
+				<a class="collapse-item" href="<%- root %>/documento/listar">Gerenciar</a>
+			</div>
+		</div>
+	</li>
+
+	<hr class="sidebar-divider" />
 
 	<div class="sidebar-heading">
 		Interface
@@ -91,7 +103,7 @@
 		</div>
 	</li>
 
-	<hr class="sidebar-divider">
+	<hr class="sidebar-divider" />
 
 	<div class="sidebar-heading">
 		Extras
@@ -131,7 +143,7 @@
 		</a>
 	</li>
 
-	<hr class="sidebar-divider d-none d-md-block">
+	<hr class="sidebar-divider d-none d-md-block" />
 
 	<div class="text-center d-none d-md-inline">
 		<button class="rounded-circle border-0" id="sidebarToggle"></button>
