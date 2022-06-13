@@ -1,6 +1,7 @@
 ﻿import app = require("teem");
 import perfis = require("../models/perfil");
 import Usuario = require("../models/usuario");
+import etiqueta = require("../models/etiqueta");
 
 class UsuarioRoute {
 	public static async criar(req: app.Request, res: app.Response) {
@@ -16,6 +17,34 @@ class UsuarioRoute {
 				perfis: perfis.lista
 			});
 	}
+
+    static async contatos(req: app.Request, res: app.Response) {
+        let u = await Usuario.cookie(req);
+        if (!u)
+            res.redirect(app.root + "/acesso");
+        else
+            res.render("testamento/contatos", {
+                titulo: "Criar Usuário",
+                textoSubmit: "Criar",
+                usuario: u,
+                item: null,
+                perfis: perfis.lista
+            });
+    }
+
+	static async testamentos(req: app.Request, res: app.Response) {
+        let u = await Usuario.cookie(req);
+        if (!u)
+            res.redirect(app.root + "/acesso");
+        else
+            res.render("testamento/testamentos", {
+                titulo: "Criar Usuário",
+                textoSubmit: "Criar",
+                usuario: u,
+                item: null,
+                etiqueta: etiqueta.lista
+            });
+    }
 
 	public static async editar(req: app.Request, res: app.Response) {
 		let u = await Usuario.cookie(req);

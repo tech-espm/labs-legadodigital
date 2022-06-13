@@ -47,7 +47,7 @@ CREATE TABLE categoria (
   PRIMARY KEY (id)
 );
 
-INSERT INTO categoria (id, nome) VALUES (1, 'Social'), (2, 'Financeiro');
+INSERT INTO categoria (id, nome) VALUES (1, 'Social'), (2, 'Financeiro'), (3, 'Administrativo'), (4, 'Confidencial'), (5, 'Familiar');
 
 CREATE TABLE documento (
   id BIGINT NOT NULL AUTO_INCREMENT,

@@ -29,6 +29,24 @@
 	</li>
 	<% } %>
 
+	<% if (!usuario.admin) { %>
+	<hr class="sidebar-divider">
+
+	<li class="nav-item">
+		<a class="nav-link" href="<%- root %>/usuario/testamentos">
+			<i class="fas fa-solid fa-file-signature"></i>
+			<span><b>Testamentos</b></span>
+		</a>
+	</li>
+
+	<li class="nav-item">
+		<a class="nav-link" href="<%- root %>/usuario/contatos">
+			<i class="fas fa-fw fa-user"></i>
+			<span>Contatos</span>
+		</a>
+	</li>
+	<% } %>
+	
 	<hr class="sidebar-divider">
 
 	<div class="sidebar-heading">

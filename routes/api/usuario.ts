@@ -1,6 +1,7 @@
 ﻿import app = require("teem");
 import Perfil = require("../../enums/perfil");
 import Usuario = require("../../models/usuario");
+import Etiqueta = require("../../enums/etiqueta");
 
 class UsuarioApiRoute {
 	@app.http.post()
@@ -20,6 +21,14 @@ class UsuarioApiRoute {
 	}
 
 	public static async listar(req: app.Request, res: app.Response) {
+		const u = await Usuario.cookie(req, res, true);
+		if (!u)
+			return;
+
+		res.json(await Usuario.listar());
+	}
+
+	public static async contatos(req: app.Request, res: app.Response) {
 		const u = await Usuario.cookie(req, res, true);
 		if (!u)
 			return;
