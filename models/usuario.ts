@@ -178,6 +178,7 @@ class Usuario {
 
 		return (lista || []);
 	}
+	
 
 	public static async obter(id: number): Promise<Usuario> {
 		let lista: Usuario[] = null;

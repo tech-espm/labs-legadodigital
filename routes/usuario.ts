@@ -2,6 +2,7 @@
 import perfis = require("../models/perfil");
 import Usuario = require("../models/usuario");
 import etiqueta = require("../models/etiqueta");
+import Contato = require("../models/contato");
 
 class UsuarioRoute {
 	public static async criar(req: app.Request, res: app.Response) {
@@ -24,11 +25,11 @@ class UsuarioRoute {
             res.redirect(app.root + "/acesso");
         else
             res.render("testamento/contatos", {
-                titulo: "Criar Usuário",
+                titulo: "Cadastrar Contato",
                 textoSubmit: "Criar",
                 usuario: u,
                 item: null,
-                perfis: perfis.lista
+                perfis: perfis.lista,
             });
     }
 
@@ -38,7 +39,7 @@ class UsuarioRoute {
             res.redirect(app.root + "/acesso");
         else
             res.render("testamento/testamentos", {
-                titulo: "Criar Usuário",
+                titulo: "Cadastrar Testamento",
                 textoSubmit: "Criar",
                 usuario: u,
                 item: null,
