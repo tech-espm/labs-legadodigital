@@ -54,7 +54,7 @@ CREATE TABLE documento (
   idusuario INT NOT NULL,
   idetiqueta INT NOT NULL,
   nome VARCHAR(100) NOT NULL,
-  descricao VARCHAR(100) NOT NULL,
+  descricao VARCHAR(100) NULL,
   conteudo MEDIUMTEXT NULL,
   extensao VARCHAR(45) NULL,
   PRIMARY KEY (id),
