@@ -1,4 +1,5 @@
 ﻿import app = require("teem");
+import Documento = require("../models/documento");
 import Usuario = require("../models/usuario");
 
 class IndexRoute {
@@ -6,6 +7,22 @@ class IndexRoute {
 		let u = await Usuario.cookie(req);
 		if (!u)
 			res.redirect(app.root + "/login");
+		else if (!u.admin)
+			res.render("documento/listar", {
+				layout: "layout-tabela",
+				titulo: "Bem vindo! Seus documentos:",
+				datatables: true,
+				usuario: u,
+				lista: await Documento.listar(u.id)
+			});	
+		else if(u.admin)
+			res.render("usuario/listar", {
+				layout: "layout-tabela",
+				titulo: "Bem vindo, administrador! Usuários atuais do sistema:",
+				datatables: true,
+				usuario: u,
+				lista: await Usuario.listar()
+			});
 		else
 			res.render("index/index", {
 				layout: "layout-sem-form",
