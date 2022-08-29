@@ -11,6 +11,15 @@ CREATE TABLE perfil (
 -- Manter sincronizado com enums/perfil.ts e models/perfil.ts
 INSERT INTO perfil (nome) VALUES ('Administrador'), ('Comum');
 
+CREATE TABLE genero (
+  idgenero INT NOT NULL AUTO_INCREMENT,
+  nomegenero VARCHAR(50) NOT NULL,
+  PRIMARY KEY (idgenero),
+  UNIQUE KEY nome_UN (nomegenero)
+);
+INSERT INTO genero (nomegenero) VALUES ('Feminino'), ('Masculino'), ('Outros'), ('Prefiro não informar');
+
+
 CREATE TABLE usuario (
   id INT NOT NULL AUTO_INCREMENT,
   email VARCHAR(100) NOT NULL,
@@ -24,8 +33,8 @@ CREATE TABLE usuario (
   exclusao DATETIME NULL,
   criacao DATETIME NOT NULL,
   dtnasc DATE,
-  genero VARCHAR(35),
-  pais VARCHAR(100),
+  idgenero INT,
+  idpais INT,
   PRIMARY KEY (id),
   UNIQUE KEY usuario_email_UN (email),
   KEY usuario_exclusao_IX (exclusao),
@@ -91,17 +100,17 @@ CREATE TABLE contato_etiqueta (
 );
 
 CREATE TABLE IF NOT EXISTS pais(
-  paisId tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
-  paisNome varchar(50) NOT NULL,
-  paisName varchar(50) NOT NULL,
-  PRIMARY KEY (paisId)
+  idpais tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  nomepais varchar(50) NOT NULL,
+  namepais varchar(50) NOT NULL,
+  PRIMARY KEY (idpais)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=253 ;
 
 --
 -- Extraindo dados da tabela 'pais'
 --
 
-INSERT INTO pais (paisId, paisNome, paisName)VALUES
+INSERT INTO pais (idpais, nomepais, namepais)VALUES
 (1, 'AFEGANISTÃO', 'AFGHANISTAN'),
 (2, 'ACROTÍRI E DECELIA', 'AKROTIRI E DEKÉLIA'),
 (3, 'ÁFRICA DO SUL', 'SOUTH AFRICA'),
