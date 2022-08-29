@@ -90,18 +90,18 @@ CREATE TABLE contato_etiqueta (
   CONSTRAINT contato_etiqueta_idetiqueta_IX FOREIGN KEY (idetiqueta) REFERENCES etiqueta (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE TABLE IF NOT EXISTS 'pais' (
-  'paisId' tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
-  'paisNome' varchar(50) NOT NULL,
-  'paisName' varchar(50) NOT NULL,
-  PRIMARY KEY ('paisId')
+CREATE TABLE IF NOT EXISTS pais(
+  paisId tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  paisNome varchar(50) NOT NULL,
+  paisName varchar(50) NOT NULL,
+  PRIMARY KEY (paisId)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=253 ;
 
 --
 -- Extraindo dados da tabela 'pais'
 --
 
-INSERT INTO 'pais' ('paisId', 'paisNome', 'paisName') VALUES
+INSERT INTO pais (paisId, paisNome, paisName)VALUES
 (1, 'AFEGANISTÃO', 'AFGHANISTAN'),
 (2, 'ACROTÍRI E DECELIA', 'AKROTIRI E DEKÉLIA'),
 (3, 'ÁFRICA DO SUL', 'SOUTH AFRICA'),
