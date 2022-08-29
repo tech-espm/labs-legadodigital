@@ -33,7 +33,7 @@ CREATE TABLE usuario (
   CONSTRAINT usuario_idperfil_FK FOREIGN KEY (idperfil) REFERENCES perfil (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-INSERT INTO usuario (email, nome, idperfil, senha, token, criacao, cpf, telefone) VALUES ('admin@litag.com.br', 'Administrador', 1, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW(), '11111111111', '11111111111');
+INSERT INTO usuario (email, nome, sobrenome, idperfil, senha, token, criacao, cpf, telefone) VALUES ('admin@litag.com.br', 'Administrador', ' ', 1, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW(), '11111111111', '11111111111');
 
 CREATE TABLE contato (
   id INT NOT NULL AUTO_INCREMENT,
