@@ -16,6 +16,9 @@ interface Usuario {
 	idperfil: Perfil;
 	senha: string;
 	criacao: string;
+	dtnasc: string;
+	idgenero: number;
+	idpais: number;
 
 	// Utilizados apenas através do cookie
 	admin: boolean;

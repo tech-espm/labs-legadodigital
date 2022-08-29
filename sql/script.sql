@@ -12,12 +12,12 @@ CREATE TABLE perfil (
 INSERT INTO perfil (nome) VALUES ('Administrador'), ('Comum');
 
 CREATE TABLE genero (
-  idgenero INT NOT NULL AUTO_INCREMENT,
-  nomegenero VARCHAR(50) NOT NULL,
-  PRIMARY KEY (idgenero),
-  UNIQUE KEY nome_UN (nomegenero)
+  id INT NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(50) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY nome_UN (nome)
 );
-INSERT INTO genero (nomegenero) VALUES ('Feminino'), ('Masculino'), ('Outros'), ('Prefiro não informar');
+INSERT INTO genero (nome) VALUES ('Feminino'), ('Masculino'), ('Outros'), ('Prefiro não informar');
 
 
 CREATE TABLE usuario (
