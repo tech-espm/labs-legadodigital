@@ -41,7 +41,7 @@ class Usuario {
 			let usuario: Usuario = null;
 
 			await app.sql.connect(async (sql) => {
-				let rows = await sql.query("select id, email, nome, idperfil, token, cpf, telefone from usuario where id = ?", [id]);
+				let rows = await sql.query("select id, email, nome, idperfil, token, cpf, telefone, dtnasc, idgenero, idpais from usuario where id = ?", [id]);
 				let row: any;
 
 				if (!rows || !rows.length || !(row = rows[0]))
@@ -57,6 +57,9 @@ class Usuario {
 				usuario.email = row.email as string;
 				usuario.nome = row.nome as string;
 				usuario.idperfil = row.idperfil as number;
+				usuario.dtnasc = row.dtnasc as string;
+				usuario.idgenero = row.idgenero as number;
+				usuario.idpais = row.idpais as number;
 				usuario.admin = (usuario.idperfil === Perfil.Administrador);
 			});
 

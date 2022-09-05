@@ -7,7 +7,7 @@ const generos = new ListaNomeada([
 	new ItemNomeado(Genero.Feminino, "Feminino"),
 	new ItemNomeado(Genero.Masculino, "Masculino"),
 	new ItemNomeado(Genero.Outros, "Outros"),
-	new ItemNomeado(Genero.Prefiro, "Prefiro não informar"),
+	new ItemNomeado(Genero.Prefiro, "Prefiro não informar")
 ]);
 
 export = generos;
