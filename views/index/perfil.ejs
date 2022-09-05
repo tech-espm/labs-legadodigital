@@ -26,18 +26,28 @@
 	<div class="col-sm-4">
 		<div class="form-group mb-0">
 			<label for="dtnasc">Data de Nascimento</label>
-			<input id="dtnasc" name="dtnasc" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=usuario.dtnasc %>" />
+			<input id="dtnasc" name="dtnasc" maxlength="100" class="form-control" type="date" spellcheck="false" value="<%=usuario.dtnasc %>" />
 		</div>
 	</div>
-
+<!--
 	<div class="col-sm-4">
 		<div class="form-group mb-0">
-			<label for="genero">Gênero</label>
-			<input id="genero" name="genero" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=usuario.genero %>" />
+			<label for="idgenero">Gênero</label>
+			<input id="idgenero" name="idgenero" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=<usuario class="generos"></usuario> %>" />
 		</div>
 	</div>
 	
-
+	<div class="col-sm-4">
+		<div class="form-group">
+			<label for="idgenero">Gênero</label>
+			<select id="idgenero" name="idgenero" class="form-control" size="1">
+				<option value="">Selecione...</option>
+				<% for (let i = 0; i < generos.length; i++) { %>
+				<option value="<%= generos[i].id %>" <%-((item && item.idgenero === generos[i].id) ? 'selected="selected"' : '') %>><%= generos[i].nome %></option>
+				<% } %>
+			</select>
+		</div>
+-->
 	<div class="col-sm-4">
 		<div class="form-group mb-0">
 			<label for="pais">País</label>

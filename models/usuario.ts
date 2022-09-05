@@ -6,6 +6,7 @@ import GeradorHash = require("../utils/geradorHash");
 import intToHex = require("../utils/intToHex");
 import Perfil = require("../enums/perfil");
 import Validacao = require("../utils/validacao");
+import Genero = require("../enums/genero");
 
 interface Usuario {
 	id: number;
@@ -17,7 +18,7 @@ interface Usuario {
 	senha: string;
 	criacao: string;
 	dtnasc: string;
-	idgenero: number;
+	idgenero: Genero;
 	idpais: number;
 
 	// Utilizados apenas através do cookie
