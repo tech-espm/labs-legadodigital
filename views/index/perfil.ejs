@@ -15,8 +15,8 @@
 
 	<div class="col-sm-3">
 		<div class="form-group mb-sm-0">
-			<label for="sobrenone">Sobrenome</label>
-			<input id="email" name="email" class="form-control" type="email" spellcheck="false" readonly="readonly" value="<%=usuario.email %>" />
+			<label for="sobrenome">Sobrenome</label>
+			<input id="sobrenome" name="sobrenome" class="form-control" type="text" spellcheck="false" value="<%=usuario.sobrenome %>" />
 		</div>
 	</div>
 </div>
@@ -36,7 +36,7 @@
 			<select id="idgenero" name="idgenero" class="form-control" size="1">
 				<option value="">Selecione...</option>
 				<% for (let i = 0; i < generos.length; i++) { %>
-				<option value="<%= generos[i].id %>" <%-((item && item.idgenero === generos[i].id) ? 'selected="selected"' : '') %>><%= generos[i].nome %></option>
+				<option value="<%= generos[i].id %>" <%-((usuario.idgenero === generos[i].id) ? 'selected="selected"' : '') %>><%= generos[i].nome %></option>
 				<% } %>
 			</select>
 		</div>
