@@ -12,6 +12,7 @@ interface Usuario {
 	id: number;
 	email: string;
 	nome: string;
+	sobrenome: string;
 	cpf: string;
 	telefone: string;
 	idperfil: Perfil;
@@ -56,6 +57,7 @@ class Usuario {
 				usuario.id = id;
 				usuario.email = row.email as string;
 				usuario.nome = row.nome as string;
+				usuario.sobrenome = row.sobrenome as string;
 				usuario.idperfil = row.idperfil as number;
 				usuario.dtnasc = row.dtnasc as string;
 				usuario.idgenero = row.idgenero as number;
@@ -114,7 +116,7 @@ class Usuario {
 		});
 	}
 
-	public static async alterarPerfil(usuario: Usuario, res: app.Response, nome: string, senhaAtual: string, novaSenha: string): Promise<string> {
+	public static async alterarPerfil(usuario: Usuario, res: app.Response, nome: string, sobrenome: string, dtnasc: string, idgenero: number, idpais: number,senhaAtual: string, novaSenha: string): Promise<string> {
 		nome = (nome || "").normalize().trim();
 		if (nome.length < 3 || nome.length > 100)
 			return "Nome inválido";
@@ -136,7 +138,7 @@ class Usuario {
 
 				let [token, cookieStr] = Usuario.gerarTokenCookie(usuario.id);
 
-				await sql.query("update usuario set nome = ?, senha = ?, token = ? where id = ?", [nome, hash, token, usuario.id]);
+				await sql.query("update usuario set nome = ?, sobrenome = ?, dtnasc = ?, idgenero = ?, idpais = ?, senha = ?, token = ? where id = ?", [nome, sobrenome, dtnasc, idgenero, idpais, hash, token, usuario.id]);
 
 				res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 			} else {
@@ -190,7 +192,7 @@ class Usuario {
 		let lista: Usuario[] = null;
 
 		await app.sql.connect(async (sql) => {
-			lista = await sql.query("select id, email, nome, idperfil, date_format(criacao, '%d/%m/%Y') criacao, cpf, telefone from usuario where id = ?", [id]) as Usuario[];
+			lista = await sql.query("select id, email, nome, sobrenome, idperfil, date_format(criacao, '%d/%m/%Y') criacao, cpf, telefone from usuario where id = ?", [id]) as Usuario[];
 		});
 
 		return ((lista && lista[0]) || null);
@@ -203,7 +205,7 @@ class Usuario {
 
 		await app.sql.connect(async (sql) => {
 			try {
-				await sql.query("insert into usuario (email, nome, idperfil, senha, criacao, cpf, telefone) values (?, ?, ?, ?, now(), ?, ?)", [usuario.email, usuario.nome, usuario.idperfil, await GeradorHash.criarHash(usuario.senha), usuario.cpf, usuario.telefone]);
+				await sql.query("insert into usuario (email, nome, sobrenome, idperfil, senha, criacao, cpf, telefone, idgenero) values (?, ?, ?, ?, ?, now(), ?, ?, ?)", [usuario.email, usuario.nome, usuario.sobrenome, usuario.idperfil, await GeradorHash.criarHash(usuario.senha), usuario.cpf, usuario.telefone, usuario.idgenero]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {

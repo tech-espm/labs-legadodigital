@@ -1,6 +1,7 @@
 ﻿import app = require("teem");
 import perfis = require("../models/perfil");
 import Usuario = require("../models/usuario");
+import generos = require("../models/genero");
 
 class UsuarioRoute {
 	public static async criar(req: app.Request, res: app.Response) {
@@ -12,6 +13,7 @@ class UsuarioRoute {
 				titulo: "Criar Usuário",
 				textoSubmit: "Criar",
 				usuario: u,
+				generos: generos.lista,
 				item: null,
 				perfis: perfis.lista
 			});
@@ -34,6 +36,7 @@ class UsuarioRoute {
 					titulo: "Editar Usuário",
 					usuario: u,
 					item: item,
+					generos: generos.lista,
 					perfis: perfis.lista
 				});
 		}

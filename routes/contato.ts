@@ -1,6 +1,7 @@
 ﻿import app = require("teem");
 import Contato = require("../models/contato");
 import Usuario = require("../models/usuario");
+import generos = require("../models/genero");
 
 class ContatoRoute {
 	public static async criar(req: app.Request, res: app.Response) {
@@ -12,6 +13,7 @@ class ContatoRoute {
 				titulo: "Criar Contato",
 				textoSubmit: "Criar",
 				usuario: u,
+				generos: generos.lista,
 				item: null
 			});
 	}
@@ -32,6 +34,7 @@ class ContatoRoute {
 				res.render("contato/editar", {
 					titulo: "Editar Contato",
 					usuario: u,
+					generos: generos.lista,
 					item: item
 				});
 		}
