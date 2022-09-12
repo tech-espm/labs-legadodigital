@@ -24,7 +24,7 @@
 <div class="row" style="margin-top: 10px">
 
 	<div class="col-sm-3">
-		<div class="form-group mb-0">
+		<div class="form-group">
 			<label for="dtnasc">Data de Nascimento</label>
 			<input id="dtnasc" name="dtnasc" maxlength="100" class="form-control" type="date" spellcheck="false" value="<%=usuario.dtnasc %>" />
 		</div>
@@ -43,9 +43,14 @@
 	</div>
 
 	<div class="col-sm-5">
-		<div class="form-group mb-0">
-			<label for="pais">País</label>
-			<input id="pais" name="pais" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=usuario.pais %>" />
+		<div class="form-group">
+			<label for="idpais">País</label>
+			<select id="idpais" name="idpais" class="form-control" size="1">
+				<option value="">Selecione...</option>
+				<% for (let i = 0; i < paises.length; i++) { %>
+				<option value="<%= paises[i].idpais %>" <%-((usuario.idpais === paises[i].idpais) ? 'selected="selected"' : '') %>><%= paises[i].nomepais %></option>
+				<% } %>
+			</select>
 		</div>
 	</div>
 
@@ -107,7 +112,16 @@
 			},
 			novaSenha2: {
 				equalTo: "#novaSenha"
-			}
+			},
+			dtnasc: {
+				required: true
+			},
+			idgenero: {
+				required: true
+			},
+			idpais: {
+				required: true
+			},
 		},
 
 		submitHandler: function (form) {

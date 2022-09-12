@@ -1,6 +1,7 @@
 ﻿import app = require("teem");
 import Documento = require("../models/documento");
 import generos = require("../models/genero");
+import Pais = require("../models/pais");
 import Usuario = require("../models/usuario");
 
 class IndexRoute {
@@ -78,7 +79,8 @@ class IndexRoute {
 			res.render("index/perfil", {
 				titulo: "Meu Perfil",
 				usuario: u,
-				generos: generos.lista
+				generos: generos.lista,
+				paises: await Pais.listar()
 			});
 	}
 

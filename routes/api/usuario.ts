@@ -10,7 +10,7 @@ class UsuarioApiRoute {
 		if (!u)
 			return;
 
-		const erro = await Usuario.alterarPerfil(u, res, req.body.nome, req.body.sobrenome, req.body.dtnasc, req.body.idgenero, req.body.idpais, req.body.senhaAtual, req.body.novaSenha);
+		const erro = await Usuario.alterarPerfil(u, res, req.body.nome, req.body.sobrenome, req.body.dtnasc, parseInt(req.body.idgenero), parseInt(req.body.idpais), req.body.senhaAtual, req.body.novaSenha);
 
 		if (erro) {
 			res.status(400).json(erro);

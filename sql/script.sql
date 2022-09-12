@@ -100,11 +100,11 @@ CREATE TABLE contato_etiqueta (
 );
 
 CREATE TABLE IF NOT EXISTS pais(
-  idpais tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  idpais int NOT NULL,
   nomepais varchar(50) NOT NULL,
   namepais varchar(50) NOT NULL,
   PRIMARY KEY (idpais)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=253 ;
+);
 
 --
 -- Extraindo dados da tabela 'pais'

@@ -42,7 +42,7 @@ class Usuario {
 			let usuario: Usuario = null;
 
 			await app.sql.connect(async (sql) => {
-				let rows = await sql.query("select id, email, nome, idperfil, token, cpf, telefone, dtnasc, idgenero, idpais from usuario where id = ?", [id]);
+				let rows = await sql.query("select id, email, nome, sobrenome, idperfil, token, cpf, telefone, dtnasc, idgenero, idpais from usuario where id = ?", [id]);
 				let row: any;
 
 				if (!rows || !rows.length || !(row = rows[0]))
@@ -142,7 +142,7 @@ class Usuario {
 
 				res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 			} else {
-				await sql.query("update usuario set nome = ? where id = ?", [nome, usuario.id]);
+				await sql.query("update usuario set nome = ?, sobrenome = ?, dtnasc = ?, idgenero = ?, idpais = ? where id = ?", [nome, sobrenome, dtnasc, idgenero, idpais, usuario.id]);
 			}
 		});
 
