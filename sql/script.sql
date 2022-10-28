@@ -55,17 +55,18 @@ CREATE TABLE contato (
 );
 
 CREATE TABLE etiqueta (
-  id INT NOT NULL,
-  nome VARCHAR(50) NOT NULL,
-  PRIMARY KEY (id)
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  idusuario INT NOT NULL,
+  nome VARCHAR(100) NOT NULL,
+  PRIMARY KEY (id),
+  KEY etiqueta_idusuario_IX (idusuario),
+  CONSTRAINT etiqueta_idusuario_FK FOREIGN KEY (idusuario) REFERENCES usuario (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
-
-INSERT INTO etiqueta (id, nome) VALUES (1, 'Social'), (2, 'Financeiro'), (3, 'Administrativo'), (4, 'Confidencial'), (5, 'Familiar');
 
 CREATE TABLE documento (
   id BIGINT NOT NULL AUTO_INCREMENT,
   idusuario INT NOT NULL,
-  idetiqueta INT NOT NULL,
+  idetiqueta BIGINT NOT NULL,
   nome VARCHAR(100) NOT NULL,
   descricao VARCHAR(100) NULL,
   conteudo MEDIUMTEXT NULL,
@@ -86,17 +87,6 @@ CREATE TABLE contato_documento (
   KEY contato_documento_iddocumento_IX (iddocumento),
   CONSTRAINT contato_documento_idcontato_IX FOREIGN KEY (idcontato) REFERENCES contato (id) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT contato_documento_iddocumento_IX FOREIGN KEY (iddocumento) REFERENCES documento (id) ON DELETE CASCADE ON UPDATE RESTRICT
-);
-
-CREATE TABLE contato_etiqueta (
-  id BIGINT NOT NULL AUTO_INCREMENT,
-  idcontato INT NOT NULL,
-  idetiqueta INT NOT NULL,
-  PRIMARY KEY (id),
-  KEY contato_etiqueta_idcontato_IX (idcontato),
-  KEY contato_etiqueta_idetiqueta_IX (idetiqueta),
-  CONSTRAINT contato_etiqueta_idcontato_IX FOREIGN KEY (idcontato) REFERENCES contato (id) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT contato_etiqueta_idetiqueta_IX FOREIGN KEY (idetiqueta) REFERENCES etiqueta (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS pais(

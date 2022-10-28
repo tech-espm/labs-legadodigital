@@ -1,7 +1,6 @@
 import app = require("teem");
-import Contato = require("../models/contato");
+import Etiqueta = require("../models/etiqueta");
 import Usuario = require("../models/usuario");
-import generos = require("../models/genero");
 
 class EtiquetaRoute {
 	public static async criar(req: app.Request, res: app.Response) {
@@ -9,11 +8,10 @@ class EtiquetaRoute {
 		if (!u)
 			res.redirect(app.root + "/acesso");
 		else
-			res.render("etiqueta/criar", {
+			res.render("etiqueta/editar", {
 				titulo: "Criar Etiqueta",
 				textoSubmit: "Criar",
 				usuario: u,
-				generos: generos.lista,
 				item: null
 			});
 	}
@@ -24,17 +22,16 @@ class EtiquetaRoute {
 			res.redirect(app.root + "/acesso");
 		} else {
 			let id = parseInt(req.query["id"] as string);
-			let item: Contato = null;
-			if (isNaN(id) || !(item = await Contato.obter(id, u.id)))
+			let item: Etiqueta = null;
+			if (isNaN(id) || !(item = await Etiqueta.obter(id, u.id)))
 				res.render("index/nao-encontrado", {
 					layout: "layout-sem-form",
 					usuario: u
 				});
 			else
-				res.render("etiqueta/gerenciar", {
-					titulo: "Gerenciar Etiqueta",
+				res.render("etiqueta/editar", {
+					titulo: "Editar Etiqueta",
 					usuario: u,
-					generos: generos.lista,
 					item: item
 				});
 		}
@@ -45,12 +42,12 @@ class EtiquetaRoute {
 		if (!u)
 			res.redirect(app.root + "/acesso");
 		else
-			res.render("etiqueta/gerenciar", {
+			res.render("etiqueta/listar", {
 				layout: "layout-tabela",
 				titulo: "Gerenciar Etiquetas",
 				datatables: true,
 				usuario: u,
-				lista: await Contato.listar(u.id)
+				lista: await Etiqueta.listar(u.id)
 			});
 	}
 }

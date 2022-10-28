@@ -1,7 +1,7 @@
 ﻿import app = require("teem");
 import Contato = require("../models/contato");
 import Documento = require("../models/documento");
-import etiquetas = require("../models/etiqueta");
+import Etiqueta = require("../models/etiqueta");
 import Usuario = require("../models/usuario");
 
 class DocumentoRoute {
@@ -16,7 +16,7 @@ class DocumentoRoute {
 				usuario: u,
 				item: null,
 				contatos: await Contato.listar(u.id),
-				etiquetas: etiquetas.lista
+				etiquetas: await Etiqueta.listar(u.id)
 			});
 	}
 
@@ -38,7 +38,7 @@ class DocumentoRoute {
 					usuario: u,
 					item: item,
 					contatos: await Contato.listar(u.id),
-					etiquetas: etiquetas.lista
+					etiquetas: await Etiqueta.listar(u.id)
 				});
 		}
 	}

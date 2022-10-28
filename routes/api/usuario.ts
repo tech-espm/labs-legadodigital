@@ -1,7 +1,6 @@
 ﻿import app = require("teem");
 import Perfil = require("../../enums/perfil");
 import Usuario = require("../../models/usuario");
-import Etiqueta = require("../../enums/etiqueta");
 
 class UsuarioApiRoute {
 	@app.http.post()

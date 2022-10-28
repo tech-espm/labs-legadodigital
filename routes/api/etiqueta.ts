@@ -1,5 +1,5 @@
 import app = require("teem");
-import Contato = require("../../models/contato");
+import Etiqueta = require("../../models/etiqueta");
 import Usuario = require("../../models/usuario");
 
 class EtiquetaApiRoute {
@@ -9,7 +9,7 @@ class EtiquetaApiRoute {
 		if (!u)
 			return;
 
-		const erro = await Contato.criar(req.body, u.id);
+		const erro = await Etiqueta.criar(req.body, u.id);
 
 		if (erro) {
 			res.status(400).json(erro);
@@ -25,7 +25,7 @@ class EtiquetaApiRoute {
 		if (!u)
 			return;
 
-		const erro = await Contato.editar(req.body, u.id);
+		const erro = await Etiqueta.editar(req.body, u.id);
 
 		if (erro) {
 			res.status(400).json(erro);
@@ -48,7 +48,7 @@ class EtiquetaApiRoute {
 			return;
 		}
 
-		const erro = await Contato.excluir(id, u.id);
+		const erro = await Etiqueta.excluir(id, u.id);
 
 		if (erro) {
 			res.status(400).json(erro);
