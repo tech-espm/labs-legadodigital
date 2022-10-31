@@ -15,7 +15,9 @@ interface Documento {
 }
 
 class Documento {
-    private static validar(documento: Documento, criacao: boolean): string {
+	private static readonly caminhoAnexos = "anexos/";
+
+	private static validar(documento: Documento, criacao: boolean): string {
 		if (!documento)
 			return "Documento inválido";
 
@@ -71,7 +73,7 @@ class Documento {
 		return ((lista && lista[0]) || null);
 	}
 
-    public static async criar(documento: Documento, idusuario: number): Promise<string> {
+    public static async criar(documento: Documento, arquivo: app.UploadedFile, idusuario: number): Promise<string> {
 		let res: string;
 		if ((res = Documento.validar(documento, true)))
 			return res;
@@ -80,7 +82,19 @@ class Documento {
 			try {
 				await sql.beginTransaction();
 
-				await sql.query("insert into documento (idusuario, idetiqueta, nome, descricao, conteudo, extensao) values (?, ?, ?, ?, ?, null)", [idusuario, documento.idetiqueta, documento.nome, documento.descricao, documento.conteudo]);
+				let extensao: string | null = null;
+
+				if (arquivo) {
+					extensao = ".";
+
+					if (arquivo.originalname) {
+						const i = arquivo.originalname.lastIndexOf(".");
+						if (i >= 0)
+							extensao = arquivo.originalname.substring(i);
+					}
+				}
+
+				await sql.query("insert into documento (idusuario, idetiqueta, nome, descricao, conteudo, extensao) values (?, ?, ?, ?, ?, ?)", [idusuario, documento.idetiqueta, documento.nome, documento.descricao, documento.conteudo, extensao]);
 
 				const id: number = await sql.scalar("select last_insert_id()");
 
@@ -88,6 +102,9 @@ class Documento {
 					for (let i = 0; i < documento.idsContato.length; i++)
 						await sql.query("insert into contato_documento (idcontato, iddocumento) values (?, ?)", [documento.idsContato[i], id]);
 				}
+
+				if (arquivo)
+					await app.fileSystem.saveUploadedFileToNewFile(Documento.caminhoAnexos + id, arquivo);
 
 				await sql.commit();
 			} catch (e) {
@@ -109,7 +126,7 @@ class Documento {
 		return res;
 	}
     
-	public static async editar(documento: Documento, idusuario: number): Promise<string> {
+	public static async editar(documento: Documento, arquivo: app.UploadedFile, idusuario: number): Promise<string> {
 		let res: string;
 		if ((res = Documento.validar(documento, false)))
 			return res;
@@ -129,6 +146,20 @@ class Documento {
 					await sql.query("insert into contato_documento (idcontato, iddocumento) values (?, ?)", [documento.idsContato[i], documento.id]);
 			}
 
+			if (arquivo) {
+				let extensao = ".";
+
+				if (arquivo.originalname) {
+					const i = arquivo.originalname.lastIndexOf(".");
+					if (i >= 0)
+						extensao = arquivo.originalname.substring(i);
+				}
+
+				await sql.query("update documento set extensao = ? where id = ? and idusuario = ?", [extensao, documento.id, idusuario]);
+
+				await app.fileSystem.saveUploadedFile(Documento.caminhoAnexos + documento.id, arquivo);
+			}
+
 			await sql.commit();
 
 			return null;
@@ -137,9 +168,20 @@ class Documento {
 
 	public static async excluir(id: number, idusuario: number): Promise<string> {
 		return app.sql.connect(async (sql) => {
+			await sql.beginTransaction();
+
 			await sql.query("delete from documento where id = ? and idusuario = ?", [id, idusuario]);
 
-			return (sql.affectedRows ? null : "Documento não encontrado");
+			if (!sql.affectedRows)
+				return "Documento não encontrado";
+
+			const caminho = Documento.caminhoAnexos + id;
+			if (await app.fileSystem.exists(caminho))
+				await app.fileSystem.deleteFile(caminho);
+			
+			await sql.commit();
+
+			return null;
 		});
 	}
 }

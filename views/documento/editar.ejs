@@ -27,6 +27,11 @@
 	<input id="descricao" name="descricao" maxlength="100" class="form-control" type="text" value="<%=(item ? item.descricao : '') %>" />
 </div>
 
+<div class="form-group">
+	<label for="arquivo">Arquivo Anexo (Opcional)</label>
+	<input id="arquivo" name="arquivo" class="form-control" type="file" />
+</div>
+
 <div id="editorConteudo"><%-(item ? item.conteudo : '') %></div>
 
 <hr/>
@@ -126,7 +131,7 @@
 
 			//<% if (item) { %>
 
-			JsonWebApi.postFormData("<%- root %>/api/documento/editar", form, function (response) {
+			JsonWebApi.postFormData("<%- root %>/api/documento/editar", new FormData(form), function (response) {
 				if (response.success)
 					Swal.success("Documento alterado com sucesso! " + emoji.happy);
 				else
@@ -135,7 +140,7 @@
 
 			//<% } else { %>
 
-			JsonWebApi.postFormData("<%- root %>/api/documento/criar", form, function (response) {
+			JsonWebApi.postFormData("<%- root %>/api/documento/criar", new FormData(form), function (response) {
 				if (response.success) {
 					resetForm("#form");
 					CKEDITOR.instances.editorConteudo.setData("");

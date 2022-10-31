@@ -1,4 +1,5 @@
 .DS_Store
+anexos/
 node_modules/
 src/
 .env
