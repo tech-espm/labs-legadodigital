@@ -21,12 +21,16 @@ interface Usuario {
 	dtnasc: string;
 	idgenero: Genero;
 	idpais: number;
+	ultimologin?: string;
+	diasrestantes?: number;
 
 	// Utilizados apenas através do cookie
 	admin: boolean;
 }
 
 class Usuario {
+	private static readonly DiasMaximosParaReLogin = 180;
+	private static readonly DiasValidadeLogin = 15;
 	private static readonly IdAdmin = 1;
 
 	public static async cookie(req: app.Request, res: app.Response = null, admin: boolean = false): Promise<Usuario> {
@@ -42,7 +46,7 @@ class Usuario {
 			let usuario: Usuario = null;
 
 			await app.sql.connect(async (sql) => {
-				let rows = await sql.query("select id, email, nome, sobrenome, idperfil, token, cpf, telefone, dtnasc, idgenero, idpais from usuario where id = ?", [id]);
+				let rows = await sql.query(`select id, email, nome, sobrenome, idperfil, token, cpf, telefone, dtnasc, idgenero, idpais, datediff(date_add(ultimologin, interval ${Usuario.DiasMaximosParaReLogin} day), now()) diasrestantes from usuario where id = ?`, [id]);
 				let row: any;
 
 				if (!rows || !rows.length || !(row = rows[0]))
@@ -62,6 +66,7 @@ class Usuario {
 				usuario.dtnasc = row.dtnasc as string;
 				usuario.idgenero = row.idgenero as number;
 				usuario.idpais = row.idpais as number;
+				usuario.diasrestantes = row.diasrestantes as number;
 				usuario.admin = (usuario.idperfil === Perfil.Administrador);
 			});
 
@@ -98,11 +103,11 @@ class Usuario {
 
 			let [token, cookieStr] = Usuario.gerarTokenCookie(usuario.id);
 
-			await sql.query("update usuario set token = ? where id = ?", [token, usuario.id]);
+			await sql.query("update usuario set token = ?, ultimologin = ? where id = ?", [token, DataUtil.horarioDeBrasiliaISOComHorario(), usuario.id]);
 
 			usuario.admin = (usuario.idperfil === Perfil.Administrador);
 
-			res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
+			res.cookie(appsettings.cookie, cookieStr, { maxAge: Usuario.DiasValidadeLogin * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 
 			return [null, usuario];
 		});
@@ -140,7 +145,7 @@ class Usuario {
 
 				await sql.query("update usuario set nome = ?, sobrenome = ?, dtnasc = ?, idgenero = ?, idpais = ?, senha = ?, token = ? where id = ?", [nome, sobrenome, dtnasc, idgenero, idpais, hash, token, usuario.id]);
 
-				res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
+				res.cookie(appsettings.cookie, cookieStr, { maxAge: Usuario.DiasValidadeLogin * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 			} else {
 				await sql.query("update usuario set nome = ?, sobrenome = ?, dtnasc = ?, idgenero = ?, idpais = ? where id = ?", [nome, sobrenome, dtnasc, idgenero, idpais, usuario.id]);
 			}
